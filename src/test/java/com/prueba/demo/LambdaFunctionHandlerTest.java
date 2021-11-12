@@ -7,18 +7,27 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.events.APIGatewayV2HTTPEvent;
+import com.amazonaws.services.lambda.runtime.events.APIGatewayV2HTTPResponse;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 /**
  * A simple test harness for locally invoking your Lambda function handler.
  */
 public class LambdaFunctionHandlerTest {
 
-    private static String groups;
+    private static APIGatewayV2HTTPEvent groups = new APIGatewayV2HTTPEvent();
 
     @BeforeClass
     public static void createInput() throws IOException {
         // TODO: set up your sample input object here.
-        groups = null;
+    	//APIGatewayV2HTTPEvent groups = new APIGatewayV2HTTPEvent();
+    	groups.setBody("{\"groups\":\"1,2,1,1,1,2,1,3\"}");    	
+    	//System.out.println("groups ="+groups);
+    		   
     }
 
     private Context createContext() {
@@ -31,13 +40,16 @@ public class LambdaFunctionHandlerTest {
     }
 
     @Test
-    public void testLambdaFunctionHandler() {
+    public void testLambdaFunctionHandler() throws IOException {
         LambdaFunctionHandler handler = new LambdaFunctionHandler();
         Context ctx = createContext();
-
-        String output = handler.handleRequest(groups, ctx);
-
-        // TODO: validate output here if needed.
-        Assert.assertEquals("Hello from Lambda!", output);
+               
+        APIGatewayV2HTTPResponse output = handler.handleRequest(groups, ctx);
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        JsonParser parser = new JsonParser();
+		JsonObject sizesJson = parser.parse("{\"sizes\":\"3,4,6,12\"}").getAsJsonObject();      
+        System.out.println(gson.toJson(sizesJson)+"    "+output.getBody());
+		Assert.assertEquals(gson.toJson(sizesJson),output.getBody());
+        
     }
 }

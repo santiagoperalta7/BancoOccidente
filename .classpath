@@ -34,6 +34,5 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/Prueba Banco de Occidente/libraries/gson-2.8.5.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
